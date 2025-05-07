@@ -28,6 +28,15 @@ namespace ToDoManagement
 
             builder.Services.AddMemoryCache();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
 
             var app = builder.Build();
 
@@ -37,6 +46,7 @@ namespace ToDoManagement
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseCors("AllowAll");
 
             app.UseHttpsRedirection();
 

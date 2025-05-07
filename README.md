@@ -3,7 +3,7 @@
 ## How to run the project
 1. Clone the repository to your local machine.
 2. Open the solution in Visual Studio or VS Code.
-3. Run the `Todo.Api` project for the API and `Todo.Mvc` project for the frontend (MVC).
+3. Run the `Todo.Api` project for the API and `Todo.FrontEnd` project for the frontend.
 4. Make sure SQL Server is running, and the connection string is set in `appsettings.json`.
 
 ## Setup requirements
@@ -23,6 +23,8 @@
   - All methods return a `ResponseModel<T>` with either data or an error message
   - **Pagination**: Implemented simple pagination using `PageIndex` and `PageSize` parameters in the `Get()` method
   - **Caching**: Used in-memory caching (`IMemoryCache`) to store and retrieve todo list data to reduce database calls and improve performance
+  -CORS 
+	 
 
 - **DTOs**
   - Used `AddTodoItemDto`, `UpdateTodoItemDto`, and `TodoItemDto` to structure request and response data
