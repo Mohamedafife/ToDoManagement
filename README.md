@@ -23,7 +23,7 @@
   - All methods return a `ResponseModel<T>` with either data or an error message
   - **Pagination**: Implemented simple pagination using `PageIndex` and `PageSize` parameters in the `Get()` method
   - **Caching**: Used in-memory caching (`IMemoryCache`) to store and retrieve todo list data to reduce database calls and improve performance
-  -CORS 
+  - **CORS 
 	 
 
 - **DTOs**
