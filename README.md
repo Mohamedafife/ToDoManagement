@@ -40,7 +40,7 @@
   - Enabled Swagger UI for easy API testing
 
 ## What I found challenging
-- Time management and ensuring the API and MVC frontend worked seamlessly together.
+- The task was straightforward and didn’t present any major difficulties. It was a good opportunity to apply my skills
 
 
 
