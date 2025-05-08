@@ -3,6 +3,7 @@ using Microsoft.Extensions.Caching.Memory;
 using ToDoManagement.Abstractions;
 using ToDoManagement.Dto;
 using ToDoManagement.Dto.TodoItem;
+using ToDoManagement.Enum;
 using ToDoManagement.Models;
 
 namespace ToDoManagement.Service
@@ -14,7 +15,7 @@ namespace ToDoManagement.Service
         private readonly IMapper _mapper;
         private readonly IMemoryCache _memoryCache;
 
-        public TodoItemService(IGenericRepository<TodoItem> todoItemRepo , ILogger<TodoItem> logger , IMapper mapper , IMemoryCache memoryCache)
+        public TodoItemService(IGenericRepository<TodoItem> todoItemRepo, ILogger<TodoItem> logger, IMapper mapper, IMemoryCache memoryCache)
         {
             _todoItemRepo = todoItemRepo;
             _logger = logger;
@@ -63,30 +64,56 @@ namespace ToDoManagement.Service
         {
             try
             {
-               
-                    string cacheKey = $"TodoList_Page_{requestModel.PageIndex}_Size_{requestModel.PageSize}";
 
-                    if (_memoryCache.TryGetValue(cacheKey, out List<TodoItemDto> cachedList))
-                    {
-                        return ResponseModel<List<TodoItemDto>>.Success(cachedList);
-                    }
+                string cacheKey = $"TodoList_Page_{requestModel.PageIndex}_Size_{requestModel.PageSize}";
 
-                    var todolist = _todoItemRepo.Get().AsQueryable();
+                if (_memoryCache.TryGetValue(cacheKey, out List<TodoItemDto> cachedList))
+                {
+                    return ResponseModel<List<TodoItemDto>>.Success(cachedList);
+                }
 
-                    var paginatedList = todolist
+                var todolist = _todoItemRepo.Get();
+
+                var FilterationbyStues = todolist.Where(x => x.Status == requestModel.Status);
+
+                var paginatedList = todolist
                         .Skip((requestModel.PageIndex - 1) * requestModel.PageSize)
                         .Take(requestModel.PageSize)
                         .ToList();
 
-                    var mapped = _mapper.Map<List<TodoItemDto>>(paginatedList);
+                var mapped = _mapper.Map<List<TodoItemDto>>(paginatedList);
 
-                    _memoryCache.Set(cacheKey, mapped, TimeSpan.FromMinutes(5));
+                _memoryCache.Set(cacheKey, mapped, TimeSpan.FromMinutes(5));
 
-                    _todoItemRepo.Save();
+                _todoItemRepo.Save();
             }
             catch (Exception ex) { _logger.Log(LogLevel.Error, ex.ToString()); }
 
             return ResponseModel<List<TodoItemDto>>.Error();
+        }
+
+        public async Task<ResponseModel<string>> MarkAsComplete(int id)
+        {
+            try
+            {
+                var todo =  _todoItemRepo.Get().FirstOrDefault(x => x.Id == id);
+
+                if (todo == null)
+                    return ResponseModel<string>.Error("Not Found");
+
+                todo.Status = TodoStatus.Completed;
+
+                todo.LastModifiedDate = DateTime.UtcNow;
+
+                _todoItemRepo.Update(todo);
+
+                await _todoItemRepo.Save();
+
+                return ResponseModel<string>.Success();
+            }
+            catch (Exception ex) { _logger.Log(LogLevel.Error, ex.ToString());}
+
+            return ResponseModel<string>.Error();
         }
 
         public async Task<ResponseModel<TodoItemDto>> Update(UpdateTodoItemDto updateCityDto)

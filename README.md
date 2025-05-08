@@ -7,7 +7,7 @@
 4. Make sure SQL Server is running, and the connection string is set in `appsettings.json`.
 
 ## Setup requirements
-- .NET 6 SDK
+- .NET 8 SDK
 - SQL Server (or SQL Express)
 - Entity Framework Core for database migrations
 

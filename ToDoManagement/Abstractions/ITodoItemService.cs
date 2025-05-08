@@ -9,5 +9,6 @@ namespace ToDoManagement.Abstractions
         Task<ResponseModel<string>> Delete(int id);
         Task<ResponseModel<TodoItemDto>> Add(AddTodoItemDto addCityDto);
         Task<ResponseModel<TodoItemDto>> Update(UpdateTodoItemDto updateCityDto);
+        public Task<ResponseModel<string>> MarkAsComplete(int id);
     }
 }

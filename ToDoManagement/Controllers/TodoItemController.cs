@@ -22,7 +22,7 @@ namespace ToDoManagement.Controllers
         => Ok(_todoItemService.Get(requestModel));
 
         [HttpPost("AddTodo")]
-        public async Task<ActionResult<ResponseModel<TodoItemDto>>> AddTodo([FromBody] AddTodoItemDto addTodoItemDto)
+        public async Task<ActionResult<ResponseModel<TodoItemDto>>> AddTodo([FromQuery] AddTodoItemDto addTodoItemDto)
           => Ok(await _todoItemService.Add(addTodoItemDto));
 
         [HttpPut("UpdateTodo")]
@@ -32,5 +32,9 @@ namespace ToDoManagement.Controllers
         [HttpDelete("DeleteTodo")]
         public async Task<ActionResult<ResponseModel<string>>> DeleteTodo(int id)
           => Ok(await _todoItemService.Delete(id));
+
+        [HttpPut("MarkAsComplete/{id}")]
+        public async Task<ActionResult<ResponseModel<string>>> MarkAsComplete(int id)
+         => Ok(await _todoItemService.MarkAsComplete(id));
     }
 }
